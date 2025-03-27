@@ -1,4 +1,4 @@
-import { db } from './config/firebase';
+import { db } from './src/config/firebase.js';
 import {collection, getDocs, addDoc, doc, updateDoc } from 'firebase/firestore';
 
 let usuarioLogueado = false;
