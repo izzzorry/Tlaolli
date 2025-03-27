@@ -1,7 +1,16 @@
 // Importaciones necesarias
-import { db } from './config/firebase.js';
-import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
+const firebaseConfig = {
+  apiKey: "AIzaSyC5RfGB1H6olHubSyO4ARAr-UPnFGCh8Kc",
+  authDomain: "videogames-366f5.firebaseapp.com",
+  projectId: "videogames-366f5",
+  storageBucket: "videogames-366f5.firebasestorage.app",
+  messagingSenderId: "1022961712480",
+  appId: "1:1022961712480:web:a05260cbf26fcc5db3b205"
+};
 
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 // Elementos del DOM
 const container = document.getElementById('cards-container');
 const loginIcon = document.getElementById("loginIcon");
