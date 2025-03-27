@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./src/Recursos/VideoJuego.png" />
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tlaolli:La Cultura del maíz</title>
+  </head>
+  <body>
+
+    
+    <header>
+      <a href="#" class="logo">
+        <img src="../Recursos/VideoJuego.png" alt="Logo Tlaolli">
+      </a>
+    
+      <nav class="navbar">
+        <ul>
+          <li><a href="/Tlaolli/index.html" class="active">Inicio</a></li>
+          <li><a href="#about">Proyecto</a></li>
+          <li><a href="/Tlaolli/index.html#alumnos">Equipo</a></li>
+        </ul>
+      </nav>
+    
+      <div class="izq" id="loginIcon">
+        <i class="fa-solid fa-user"></i>
+      </div>
+    </header>
+    
+    <section id="Personajes" class="alumnos">
+    <h1 class="heading">Personajes</h1>
+    <h3 class="title"></h3>
+    
+      <div id="Personajes-cards-container" class="card-container">
+
+        <div class="card">
+          <img src="" alt="">
+          <h3>Nombre de personaje</h3>
+          <p>Genero</p>
+          <p>Edad</p>
+          <p>Comunidad</p>
+          <p>Habilidades:</p>
+          <ul>
+            <li>Habilidad 1</li>
+            <li>Habilidad 2</li>
+            <li>Habilidad 3</li>
+          </ul>
+          <p>Debilidades:</p>
+          <ul>
+            <li>1</li>
+            <li> 2</li>
+            <li>3</li>
+          </ul>
+      </div>
+      
+     
+
+      </div>
+      <button id="crearPersonajeBtn" style="margin: 20px;">+ Nuevo personaje</button>
+    </section>
+   
+  
+  <section class="about" id="about">
+    <h1  class="heading">Novedades</h1>
+
+    <div class="box-container">
+      <div class="box">
+          <h3>Titulo</h3>
+          <img src="">
+          <p>Descripcion </p>
+          <p>Por: </p>
+          <p>Fecha </p>
+      </div>
+
+  </div>
+ <button id="crearNovedadBtn" style="margin: 20px;">+ Novedad</button>
+</section>
+
+
+<section class="footer" id="footer">
+  <div class="credits">
+      <p>Créditos:</p>
+      <div class="credit-list">
+          <p>Diseño y desarrollo Web: Isabel Cristina Zorrilla M</p>
+          <p>Asistencia de IA: ChatGPT de OpenAI</p>
+          <div class="additional-references">
+              <p><strong>Contenido adicional y referencias:</strong></p>
+              <div class="references">
+                  <div class="reference">
+                      <strong>Unity</strong>
+                      <ul>
+                          <li><a href="https://docs.unity3d.com/" target="_blank">Unity Documentation</a></li>
+                          <li>"Unity 2021 Cookbook" de Matt Smith y Shaun Ferns</li>
+                      </ul>
+                  </div>
+                  
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="alliances">
+      <div class="alliance-logos">
+          <img src="https://res.cloudinary.com/dj9nrp8r8/image/upload/v1743082937/tm7oqun7zwvjgfcxkzsf.png" alt="Alianza 1" />
+          
+      </div>
+  </div>
+</section>  
+
+
+
+
+   <!-- Modal -->
+   <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Iniciar sesión</h2>
+      <input type="text" id="username" placeholder="Usuario" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <button id="loginBtn">Ingresar</button>
+      <p id="loginStatus"></p>
+    </div>
+  </div>
+  
+  <div id="personajeModal" class="modal">
+    <div class="modal-content">
+      <span class="close-personaje">&times;</span>
+      <h2 id="modalTitulo">Crear Personaje</h2>
+  
+      <input type="text" id="nombre" placeholder="Nombre">
+      <input type="text" id="genero" placeholder="Género">
+      <input type="text" id="edad" placeholder="Edad">
+      <input type="text" id="comunidad" placeholder="Comunidad">
+      <textarea id="habilidades" placeholder="Habilidades (separadas por coma)"></textarea>
+      <textarea id="debilidades" placeholder="Debilidades (separadas por coma)"></textarea>
+      <input type="file" id="foto">
+      <img id="previewFoto" src="" style="max-width: 100px; margin: 10px 0;">
+      <button id="guardarPersonaje">Guardar</button>
+    </div>
+  </div>
+
+  <div id="novedadModal" class="modal">
+    <div class="modal-content">
+      <span class="close-novedad">&times;</span>
+      <h2 id="modalTituloNovedad">Crear Novedad</h2>
+  
+      <input type="text" id="tituloNovedad" placeholder="Título" />
+      <textarea id="descripcionNovedad" placeholder="Descripción"></textarea>
+      <input type="text" id="autorNovedad" placeholder="Por:" />
+      <input type="file" id="archivoNovedad" />
+      <img id="previewNovedadImg" src="" style="max-width: 100px; display:none; margin-top: 1rem;" />
+      <video id="previewNovedadVideo" controls style="max-width: 100px; display:none; margin-top: 1rem;"></video>
+      <button id="guardarNovedad">Guardar Novedad</button>
+    </div>
+  </div>
+  
+  
+
+    <script type="module" src="./proyecto.js"></script>
+  </body>
+</html>
+
+

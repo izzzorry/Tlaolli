@@ -19,7 +19,7 @@
       <nav class="navbar">
         <ul>
           <li><a href="#home" class="active">Inicio</a></li>
-          <li><a href="./src/Proyecto.html">Proyecto</a></li>
+          <li><a href="./src/Proyecto/Proyecto.html">Proyecto</a></li>
           <li><a href="#alumnos">Equipo</a></li>
         </ul>
       </nav>
@@ -36,22 +36,24 @@
           <h1>Tlaolli:La Cultura del maíz</h1>
   
       </div>
-      <div class="project-content">
-        <p>Es un juego de simulación y estrategia inspirado en la cultura del maíz en 
-          Latinoamérica. Los jugadores gestionan una aldea en crecimiento, utilizando el maíz 
-          como recurso principal para construir, alimentar a la comunidad y expandir su 
-          territorio. La experiencia combina mecánicas de recolección, producción y comercio 
-          con una narrativa envolvente centrada en la supervivencia, la cooperación y la 
-          sostenibilidad. </p>
-        <a href="./src/Recursos/VideoJuego.png"><button>Ver más</button></a>
-    </div>
+      
+  
+    
+
       </section>
 
 
   <section class="about" id="about">
-             
-          
-      
+   
+    <div class="project-content">
+      <p>Es un juego de simulación y estrategia inspirado en la cultura del maíz en 
+        Latinoamérica. Los jugadores gestionan una aldea en crecimiento, utilizando el maíz 
+        como recurso principal para construir, alimentar a la comunidad y expandir su 
+        territorio. La experiencia combina mecánicas de recolección, producción y comercio 
+        con una narrativa envolvente centrada en la supervivencia, la cooperación y la 
+        sostenibilidad. </p>
+      <a href="./src/Recursos/VideoJuego.png"><button>Ver más</button></a>
+  </div>
 
       <div class="box-container">
         <h2>Características</h2>
@@ -151,7 +153,29 @@
       <p id="loginStatus"></p>
     </div>
   </div>
+
+  <!-- Modal de edicción -->
+
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-edit">&times;</span>
+      <h2>Editar Perfil</h2>
+  
+      <input type="text" id="editNombre" placeholder="Nombre">
+      <input type="text" id="editRol" placeholder="Rol">
+      <input type="url" id="editGithub" placeholder="GitHub">
+      <input type="url" id="editLinkedin" placeholder="LinkedIn">
+      
+      <input type="file" id="editFoto">
+      <img id="previewImg" src="" alt="Preview" style="max-width: 100px; margin-top: 10px;">
+      
+      <button id="saveChanges">Guardar cambios</button>
+    </div>
+  </div>
+  
   
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
+
+

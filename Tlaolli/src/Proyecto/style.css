@@ -113,6 +113,13 @@ header.fa-times {
     position: relative;
     margin: auto auto 0 auto;
 }
+
+
+.crearPersonajeBtn,.crearNovedadBtn{
+    background-color: #fff25f;
+}
+  
+
 .home .content{
     display: flex;
     align-items: center;
@@ -133,11 +140,10 @@ header.fa-times {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    
 }
 .box-container .box{
-    height: 30rem;
-    width: 35rem ;
+    height: 48rem;
+    width: 45rem ;
     background: whitesmoke;
     text-align: center;
     border-radius: 1rem;
@@ -222,7 +228,7 @@ header.fa-times {
 }
 
 .about {
-    background: var(--arenablanca);
+    background: var(--celeste);
     padding-bottom: 2rem;
 }
 
@@ -247,7 +253,7 @@ header.fa-times {
 .project-content button {
     height: 3.5rem;
     width: 17rem;
-    background: var(--azul);
+    background: var(--celeste);
     color: #fff;
     border: none;
     border-radius: 5rem;
@@ -256,7 +262,6 @@ header.fa-times {
     font-size: 2rem;
     transition: .2s;
     margin-top: 2rem; /* 👈 separa el botón del párrafo */
-    
   }
   
 
@@ -295,7 +300,7 @@ header.fa-times {
 
 
 .alumnos{
-    background: var(--azul);
+    background: var(--arenablanca);
 }
 .alumnos h1{
     color: #fff;
