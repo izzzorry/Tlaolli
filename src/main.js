@@ -1,5 +1,5 @@
 // Importaciones necesarias
-import { db } from './config/firebase';
+import { db } from '../firebase-conf';
 import {collection, getDocs, addDoc, doc, updateDoc } from 'firebase/firestore';
 
 
