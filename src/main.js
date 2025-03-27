@@ -1,5 +1,5 @@
 // Importaciones necesarias
-import { db } from './config/firebase';
+import { db } from './config/firebase.js';
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 
 // Elementos del DOM
