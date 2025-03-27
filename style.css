@@ -69,8 +69,15 @@ header .navbar ul li a {
   transition: .2s;
 }
 
+header .navbar ul li p {
+    font-size: 1.5rem;
+    color: var(--azul);
+    transition: .2s;
+  }
+
 header .navbar ul li a.active,
-header .navbar ul li a:hover {
+header .navbar ul li a:hover,header .navbar ul li p.active,
+header .navbar ul li p:hover {
   color: var(--celeste);
 }
 

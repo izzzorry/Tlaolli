@@ -75,7 +75,8 @@ header .navbar ul li p {
   }
 
 header .navbar ul li a.active,
-header .navbar ul li a:hover {
+header .navbar ul li a:hover,header .navbar ul li p.active,
+header .navbar ul li p:hover {
   color: var(--celeste);
 }
 

@@ -18,9 +18,9 @@
     
       <nav class="navbar">
         <ul>
-          <li><a href="./index.html" class="active">Inicio</a></li>
+          <li><p id="btnProyecto">Inicio</p></li>
           <li><a href="#about">Proyecto</a></li>
-          <li><a href="./index.html/#alumnos">Equipo</a></li>
+          <li><p id="btnProyecto2">Equipo</p></li>
         </ul>
       </nav>
     
@@ -157,7 +157,22 @@
   
   
 
-    
+  <script>
+    function navegarA(ruta) {
+      window.location.href = ruta;
+    }
+    document.getElementById("btnProyecto").addEventListener("click", () => {
+      navegarA("index.html"); 
+    });
+  </script>
+   <script>
+    function navegarA(ruta) {
+      window.location.href = ruta;
+    }
+    document.getElementById("btnProyecto2").addEventListener("click", () => {
+      navegarA("index.html"); 
+    });
+  </script>
     <script type="module" src="./proyecto.js"></script>
   </body>
 </html>
