@@ -68,6 +68,11 @@ header .navbar ul li a {
   color: var(--azul);
   transition: .2s;
 }
+header .navbar ul li p {
+    font-size: 1.5rem;
+    color: var(--azul);
+    transition: .2s;
+  }
 
 header .navbar ul li a.active,
 header .navbar ul li a:hover {
