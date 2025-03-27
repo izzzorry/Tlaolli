@@ -1,4 +1,7 @@
 // Importaciones necesarias
+import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
   apiKey: "AIzaSyC5RfGB1H6olHubSyO4ARAr-UPnFGCh8Kc",
   authDomain: "videogames-366f5.firebaseapp.com",
@@ -11,6 +14,8 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
+
 // Elementos del DOM
 const container = document.getElementById('cards-container');
 const loginIcon = document.getElementById("loginIcon");
