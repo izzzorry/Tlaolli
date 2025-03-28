@@ -1,70 +1,27 @@
-import { db } from './firebase-conf.js';
-import {collection, getDocs, addDoc, doc, updateDoc } from 'firebase/firestore';
-
-let usuarioLogueado = false;
-let personajeEditId = null;
-let novedadEditId = null;
-
-// === DOM Elements ===
-const personajeModal = document.getElementById("personajeModal");
-const closePersonajeBtn = document.querySelector(".close-personaje");
-const guardarBtn = document.getElementById("guardarPersonaje");
-const crearPersonajeBtn = document.getElementById("crearPersonajeBtn");
-
-const loginBtn = document.getElementById("loginBtn");
-const modal = document.getElementById("loginModal");
-const status = document.getElementById("loginStatus");
-const loginIcon = document.getElementById("loginIcon");
-const closeLoginBtn = document.querySelector(".close");
-
-const nombre = document.getElementById("nombre");
-const genero = document.getElementById("genero");
-const edad = document.getElementById("edad");
-const comunidad = document.getElementById("comunidad");
-const habilidades = document.getElementById("habilidades");
-const debilidades = document.getElementById("debilidades");
-const foto = document.getElementById("foto");
-const previewFoto = document.getElementById("previewFoto");
-
-const novedadModal = document.getElementById("novedadModal");
-const closeNovedadBtn = document.querySelector(".close-novedad");
-const guardarNovedadBtn = document.getElementById("guardarNovedad");
-const crearNovedadBtn = document.getElementById("crearNovedadBtn");
-
-const tituloNovedad = document.getElementById("tituloNovedad");
-const descripcionNovedad = document.getElementById("descripcionNovedad");
-const autorNovedad = document.getElementById("autorNovedad");
-const archivoNovedad = document.getElementById("archivoNovedad");
-const previewImg = document.getElementById("previewNovedadImg");
-const previewVideo = document.getElementById("previewNovedadVideo");
-
-// === Función para subir a Cloudinary
-async function uploadToCloudinary(file, presetName) {
-  const url = 'https://api.cloudinary.com/v1_1/dj9nrp8r8/upload';
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', presetName);
-
-  const res = await fetch(url, { method: 'POST', body: formData });
-  if (!res.ok) throw new Error("Error al subir archivo");
-
-  const data = await res.json();
-  return data.secure_url;
-}
+// === Config ===
+const db = window.db; // Obtenemos la instancia de Firestore desde firebase-conf.js
 
 // === Login ===
+const loginIcon = document.getElementById("loginIcon");
+const loginModal = document.getElementById("loginModal");
+const closeLogin = document.querySelector(".close");
+const loginBtn = document.getElementById("loginBtn");
+const status = document.getElementById("loginStatus");
+
+let usuarioLogueado = false;
+
 loginIcon.addEventListener("click", () => {
   if (usuarioLogueado) {
     usuarioLogueado = false;
     alert("Sesión cerrada");
     location.reload();
   } else {
-    modal.style.display = "block";
+    loginModal.style.display = "block";
   }
 });
 
-closeLoginBtn.addEventListener("click", () => {
-  modal.style.display = "none";
+closeLogin.addEventListener("click", () => {
+  loginModal.style.display = "none";
   status.textContent = "";
 });
 
@@ -77,252 +34,107 @@ loginBtn.addEventListener("click", async () => {
     return;
   }
 
-  const querySnapshot = await getDocs(collection(db, "Usuarios"));
-  let encontrado = false;
+  try {
+    const snapshot = await db.collection("Usuarios").get();
+    let encontrado = false;
 
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    if (data.username === username && data.password === password) {
-      encontrado = true;
+    snapshot.forEach(doc => {
+      const user = doc.data();
+      if (user.username === username && user.password === password) {
+        encontrado = true;
+      }
+    });
+
+    if (encontrado) {
+      usuarioLogueado = true;
+      loginModal.style.display = "none";
+    } else {
+      status.textContent = "❌ Usuario o contraseña incorrectos";
     }
-  });
-
-  if (encontrado) {
-    usuarioLogueado = true;
-    modal.style.display = "none";
-  } else {
-    status.textContent = "❌ Usuario o contraseña incorrectos";
+  } catch (error) {
+    console.error("Error al verificar login:", error);
   }
 });
 
-// === Personajes ===
-function limpiarFormularioPersonaje() {
-  nombre.value = "";
-  genero.value = "";
-  edad.value = "";
-  comunidad.value = "";
-  habilidades.value = "";
-  debilidades.value = "";
-  foto.value = "";
-  previewFoto.src = "";
+// === Subir a Cloudinary ===
+async function uploadToCloudinary(file, presetName) {
+  const url = 'https://api.cloudinary.com/v1_1/dj9nrp8r8/upload';
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', presetName);
+
+  const res = await fetch(url, { method: 'POST', body: formData });
+  if (!res.ok) throw new Error("Error al subir archivo");
+  const data = await res.json();
+  return data.secure_url;
 }
 
-foto.addEventListener("change", () => {
-  const file = foto.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      previewFoto.src = reader.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-closePersonajeBtn.addEventListener("click", () => {
-  personajeModal.style.display = "none";
-  personajeEditId = null;
-  limpiarFormularioPersonaje();
-});
-
-guardarBtn.addEventListener("click", async () => {
-  const habilidadesArr = habilidades.value.split(",").map(h => h.trim());
-  const debilidadesArr = debilidades.value.split(",").map(d => d.trim());
-  let fotoURL = previewFoto.src;
-
-  if (foto.files[0]) {
-    try {
-      fotoURL = await uploadToCloudinary(foto.files[0], "personaje");
-    } catch (err) {
-      alert("Error subiendo la foto");
-      return;
-    }
-  }
-
-  const data = {
-    Nombre: nombre.value,
-    Genero: genero.value,
-    Edad: edad.value,
-    Comunidad: comunidad.value,
-    Habilidades: habilidadesArr,
-    Debilidades: debilidadesArr,
-    Foto: fotoURL
-  };
-
-  try {
-    if (personajeEditId) {
-      const docRef = doc(db, "Personajes", personajeEditId);
-      await updateDoc(docRef, data);
-    } else {
-      await addDoc(collection(db, "Personajes"), data);
-    }
-    personajeModal.style.display = "none";
-    location.reload();
-  } catch (error) {
-    alert("Error guardando el personaje");
-  }
-});
-
-crearPersonajeBtn.addEventListener("click", () => {
-  if (!usuarioLogueado) {
-    alert("Debes iniciar sesión");
-    return;
-  }
-  personajeEditId = null;
-  document.getElementById("modalTitulo").textContent = "Crear Personaje";
-  personajeModal.style.display = "flex";
-});
-
-// === Novedades ===
-crearNovedadBtn.addEventListener("click", () => {
-  if (!usuarioLogueado) {
-    alert("Debes iniciar sesión");
-    return;
-  }
-
-  novedadEditId = null;
-  document.getElementById("modalTituloNovedad").textContent = "Crear Novedad";
-  novedadModal.style.display = "flex";
-});
-
-archivoNovedad.addEventListener("change", () => {
-  const file = archivoNovedad.files[0];
-  if (!file) return;
-
-  const url = URL.createObjectURL(file);
-  const isVideo = file.type.startsWith("video/");
-
-  previewImg.style.display = isVideo ? "none" : "block";
-  previewVideo.style.display = isVideo ? "block" : "none";
-
-  if (isVideo) {
-    previewVideo.src = url;
-  } else {
-    previewImg.src = url;
-  }
-});
-
-guardarNovedadBtn.addEventListener("click", async () => {
-  const file = archivoNovedad.files[0];
-  let mediaURL = "";
-
-  if (file) {
-    try {
-      mediaURL = await uploadToCloudinary(file, "novedad");
-    } catch (err) {
-      alert("Error al subir archivo");
-      return;
-    }
-  }
-
-  const data = {
-    Titulo: tituloNovedad.value,
-    Descripcion: descripcionNovedad.value,
-    Por: autorNovedad.value,
-    Fecha: new Date(),
-    Referencia: mediaURL
-  };
-
-  try {
-    if (novedadEditId) {
-      const ref = doc(db, "Novedades", novedadEditId);
-      await updateDoc(ref, data);
-    } else {
-      await addDoc(collection(db, "Novedades"), data);
-    }
-
-    novedadModal.style.display = "none";
-    location.reload();
-  } catch (err) {
-    alert("Error al guardar la novedad");
-  }
-});
-
-closeNovedadBtn.addEventListener("click", () => {
-  novedadModal.style.display = "none";
-  novedadEditId = null;
-  tituloNovedad.value = "";
-  descripcionNovedad.value = "";
-  autorNovedad.value = "";
-  archivoNovedad.value = "";
-  previewImg.style.display = "none";
-  previewVideo.style.display = "none";
-});
-
-// === Cargar datos desde Firestore ===
+// === Cargar personajes ===
 async function cargarPersonajes() {
   const container = document.getElementById("Personajes-cards-container");
   container.innerHTML = "";
 
-  const querySnapshot = await getDocs(collection(db, "Personajes"));
-  querySnapshot.forEach((docSnap) => {
-    const personaje = docSnap.data();
+  try {
+    const snapshot = await db.collection("Personajes").get();
+    snapshot.forEach(docSnap => {
+      const personaje = docSnap.data();
 
-    const card = document.createElement("div");
-    card.classList.add("card");
+      const card = document.createElement("div");
+      card.classList.add("card");
+      card.innerHTML = `
+        <img src="${personaje.Foto}" alt="${personaje.Nombre}">
+        <h3>${personaje.Nombre}</h3>
+        <p>Género: ${personaje.Genero}</p>
+        <p>Edad: ${personaje.Edad}</p>
+        <p>Comunidad: ${personaje.Comunidad}</p>
+        <p><strong>Habilidades:</strong></p>
+        <ul>${personaje.Habilidades.map(h => `<li>${h}</li>`).join('')}</ul>
+        <p><strong>Debilidades:</strong></p>
+        <ul>${personaje.Debilidades.map(d => `<li>${d}</li>`).join('')}</ul>
+      `;
 
-    card.innerHTML = `
-      <img src="${personaje.Foto}" alt="${personaje.Nombre}">
-      <h3>${personaje.Nombre}</h3>
-      <p>Género: ${personaje.Genero}</p>
-      <p>Edad: ${personaje.Edad}</p>
-      <p>Comunidad: ${personaje.Comunidad}</p>
-      <p><strong>Habilidades:</strong></p>
-      <ul>${personaje.Habilidades.map(h => `<li>${h}</li>`).join('')}</ul>
-      <p><strong>Debilidades:</strong></p>
-      <ul>${personaje.Debilidades.map(d => `<li>${d}</li>`).join('')}</ul>
-    `;
-
-    if (usuarioLogueado) {
-      card.addEventListener("click", () => {
-        alert("Editar personaje");
-      });
-    }
-
-    container.appendChild(card);
-  });
+      container.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Error cargando personajes:", error);
+  }
 }
 
+// === Cargar novedades ===
 async function cargarNovedades() {
   const container = document.querySelector("#about .box-container");
   container.innerHTML = "";
 
-  const querySnapshot = await getDocs(collection(db, "Novedades"));
+  try {
+    const snapshot = await db.collection("Novedades").get();
+    snapshot.forEach(docSnap => {
+      const novedad = docSnap.data();
+      const fecha = new Date(novedad.Fecha.toDate()).toLocaleDateString();
+      const url = novedad.Referencia;
+      const esVideo = /\.(mp4|webm|ogg)$/i.test(url);
+      const esImagen = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
 
-  querySnapshot.forEach((docSnap) => {
-    const novedad = docSnap.data();
-    const box = document.createElement("div");
-    box.classList.add("box");
+      let mediaHTML = esVideo
+        ? `<video src="${url}" controls width="100%"></video>`
+        : esImagen
+        ? `<img src="${url}" alt="${novedad.Titulo}" width="100%">`
+        : `<p>[Contenido no soportado]</p>`;
 
-    const fecha = new Date(novedad.Fecha.toDate()).toLocaleDateString();
-    const url = novedad.Referencia;
-    const esVideo = /\.(mp4|webm|ogg)$/i.test(url);
-    const esImagen = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+      const box = document.createElement("div");
+      box.classList.add("box");
+      box.innerHTML = `
+        <h3>${novedad.Titulo}</h3>
+        ${mediaHTML}
+        <p>${novedad.Descripcion}</p>
+        <p>Por: ${novedad.Por}</p>
+        <p>Fecha: ${fecha}</p>
+      `;
 
-    let mediaHTML = "";
-    if (esVideo) {
-      mediaHTML = `<video src="${url}" controls width="100%"></video>`;
-    } else if (esImagen) {
-      mediaHTML = `<img src="${url}" alt="${novedad.Titulo}" width="100%">`;
-    } else {
-      mediaHTML = `<p>[Contenido no soportado]</p>`;
-    }
-
-    box.innerHTML = `
-      <h3>${novedad.Titulo}</h3>
-      ${mediaHTML}
-      <p>${novedad.Descripcion}</p>
-      <p>Por: ${novedad.Por}</p>
-      <p>Fecha: ${fecha}</p>
-    `;
-
-    if (usuarioLogueado) {
-      box.addEventListener("click", () => {
-        alert("Editar novedad");
-      });
-    }
-
-    container.appendChild(box);
-  });
+      container.appendChild(box);
+    });
+  } catch (error) {
+    console.error("Error cargando novedades:", error);
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
